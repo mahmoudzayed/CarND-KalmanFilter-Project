@@ -56,7 +56,8 @@ public:
   double std_radrd_;
 
   ///* Weights of sigma points
-  VectorXd weights_;
+  double firstweight_;
+  double remainingweights_;
 
   ///* State dimension
   int n_x_;
@@ -93,10 +94,18 @@ public:
   virtual ~UKF();
 
   /**
-   * ProcessMeasurement
+   * ProcessMeasurement 
+   * Master module for controlling the follow of the filter.
    * @param meas_package The latest measurement data of either radar or laser
    */
-  void ProcessMeasurement(MeasurementPackage meas_package);
+  void ProcessMeasurement(MeasurementPackage meas_package);  
+  
+  /**
+   * initializeMeasurement
+   * initialize the the filter states at the begining
+   * @param meas_package The latest measurement data of either radar or laser
+   */
+  void initializeMeasurement(MeasurementPackage meas_package);
 
   /**
    * Prediction Predicts sigma points, the state, and the state covariance
@@ -105,6 +114,18 @@ public:
    */
   void Prediction(double delta_t);
 
+  /**
+   * augmanted matrix calculation
+   * @param Xsig_aug augmanted matrix
+   */
+  void UKF::augmantaion(MatrixXd Xsig_aug);
+  
+  /**
+   * predication model with a single
+   * @param Xsig_aug sigma point
+   */
+  void Predictionmodel(VectorXd Xsig_aug, double delta_t);
+		 
   /**
    * Updates the state and the state covariance matrix using a laser measurement
    * @param meas_package The measurement at k+1
